@@ -9,7 +9,7 @@
     <audio id="audio-player" controls autoplay loop></audio>
     <script>
         const audioPlayer = document.getElementById('audio-player');
-        const socket = new WebSocket('ws://your-server-ip:8887');
+        const socket = new WebSocket('ws://25.72.129.152:8887');
 
         socket.onmessage = function(event) {
             const message = event.data;
