@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+</head>
+<body>
+    <audio id="audio-player" controls autoplay loop></audio>
+    <script>
+        const audioPlayer = document.getElementById('audio-player');
+        const socket = new WebSocket('ws://your-server-ip:8887');
+
+        socket.onmessage = function(event) {
+            const message = event.data;
+
+            if (message.startsWith('play:')) {
+                const musicFile = message.split(':')[1];
+                audioPlayer.src = `${musicFile}.mp3`;
+                audioPlayer.play();
+            }
+        };
+
+        socket.onopen = function() {
+            console.log('WebSocket connection established');
+        };
+
+        socket.onclose = function() {
+            console.log('WebSocket connection closed');
+        };
+
+        socket.onerror = function(error) {
+            console.error('WebSocket error:', error);
+        };
+    </script>
+</body>
+</html>
