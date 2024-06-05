@@ -16,7 +16,7 @@
 
             if (message.startsWith('play:')) {
                 const musicFile = message.split(':')[1];
-                audioPlayer.src = `${musicFile}.mp3`;
+                audioPlayer.src = `https://obslot.github.io/manhuntero/music/${musicFile}.mp3`;
                 audioPlayer.play();
             }
         };
