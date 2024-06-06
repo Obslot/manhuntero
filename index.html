@@ -9,15 +9,18 @@
     <audio id="audio-player" controls autoplay loop></audio>
     <script>
         const audioPlayer = document.getElementById('audio-player');
-        const socket = new WebSocket('ws://localhost:8887'); 
+        const socket = new WebSocket('ws://192.168.0.3:8887'); 
 
         socket.onmessage = function(event) {
             const message = event.data;
 
             if (message.startsWith('play:')) {
                 const musicFile = message.split(':')[1];
-                audioPlayer.src = `https://obslot.github.io/manhuntero/music/${musicFile}.mp3`;
-                audioPlayer.play();
+                fadeOutAudio(audioPlayer, 1000, () => {
+                    audioPlayer.src = `https://obslot.github.io/manhuntero/music/${musicFile}.mp3`;
+                    audioPlayer.volume = 1; // Asegúrate de que el volumen esté al máximo antes de reproducir
+                    audioPlayer.play();
+                });
             }
         };
 
@@ -32,6 +35,20 @@
         socket.onerror = function(error) {
             console.error('WebSocket error:', error);
         };
+
+        function fadeOutAudio(audioElement, duration, callback) {
+            const stepTime = 50; // Tiempo entre cada cambio de volumen en milisegundos
+            const step = (audioElement.volume * stepTime) / duration;
+            const fadeOutInterval = setInterval(() => {
+                if (audioElement.volume > step) {
+                    audioElement.volume -= step;
+                } else {
+                    clearInterval(fadeOutInterval);
+                    audioElement.volume = 0;
+                    callback();
+                }
+            }, stepTime);
+        }
     </script>
 </body>
 </html>
